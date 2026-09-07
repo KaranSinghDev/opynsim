@@ -9,6 +9,9 @@ on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - OpenSim's `Tools/` are no longer part of the build (unused)
 - The `graphics.Camera` class now auto-normalizes the `direction` and
   `up` properties when they are set from Python code.
+- Thin-Plate Spline (TPS) scaling steps in the model warper now cache the
+  warping solver between steps, which improves performance for larger
+  model warping pipelines with many TPS scaling steps.
 
 
 ## 0.0.7 - 2026/07/15
