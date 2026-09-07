@@ -37,7 +37,7 @@ namespace opyn
         ModelSpecification warp(const ModelSpecification& model_specification) const;
     private:
         class Impl;
-        explicit ModelWarper(osc::CopyOnUpdSharedValue<Impl>&& impl);
+        explicit ModelWarper(osc::CopyOnUpdSharedValue<Impl> impl);
 
         osc::CopyOnUpdSharedValue<Impl> impl_;
     };

@@ -156,7 +156,7 @@ ModelWarper opyn::ModelWarper::from_xml(const std::filesystem::path& source)
 opyn::ModelWarper::ModelWarper() :
     impl_{osc::make_cowv<Impl>()}
 {}
-opyn::ModelWarper::ModelWarper(osc::CopyOnUpdSharedValue<Impl>&& impl) :
+opyn::ModelWarper::ModelWarper(osc::CopyOnUpdSharedValue<Impl> impl) :
     impl_{std::move(impl)}
 {}
 
