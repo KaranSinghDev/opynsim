@@ -123,3 +123,20 @@ def test_camera_properties_work_as_expected():
     # The camera's `up` should normalize on being set.
     camera.up = np.array([3.0, 0.0, 0.0])  # length==3
     assert np.array_equal(camera.up, np.array([1.0, 0.0, 0.0]))
+
+def test_can_construct_camera_from_position_direction_up():
+    import numpy as np
+
+    position = np.array([1.0, 2.0, 3.0])
+    direction = np.array([-1.0, 0.0, 0.0])
+    up = np.array([0.0, 1.0, 0.0])
+    camera = opyn.graphics.Camera(
+        position=position,
+        direction=direction,
+        up=up
+    )
+
+    assert np.array_equal(camera.position, position)
+    tolerance = 0.0000001  # The camera doesn't store direction/up (quaternions)
+    np.testing.assert_allclose(camera.direction, direction, atol=tolerance)
+    np.testing.assert_allclose(camera.up, up, atol=tolerance)
