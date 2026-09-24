@@ -8,6 +8,7 @@ on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Moved `opynsim.ForwardDynamicSolver` to `opynsim.solvers.ForwardDynamicsSolver`.
 - C++: Added `osc::Camera::Camera(position, direction, up)` constructor.
+- C++: Added `osc::Camera::look_at(position, target, up)` factory function.
 
 
 ## 0.0.8 - 2026/09/08

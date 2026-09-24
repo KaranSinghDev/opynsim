@@ -20,6 +20,19 @@ namespace osc
     /// points `up`.
     class Camera {
     public:
+        /// Returns a `Camera` positioned at `position` in world-space and
+        /// looking at a `target` point in world-space, with the camera
+        /// oriented such that it is `up`.
+        ///
+        /// `up` is normalized by the implementation. If it parallel with
+        /// `target - position` then it will fallback to something
+        /// non-parallel.
+        static Camera look_at(
+            const Vector3& position,
+            const Vector3& target,
+            const Vector3& up
+        );
+
         Camera();
 
         /// Constructs a camera from a world-space position (`position`),

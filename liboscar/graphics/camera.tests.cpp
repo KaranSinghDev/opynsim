@@ -22,6 +22,40 @@ using namespace osc;
 using namespace osc::literals;
 using namespace osc::tests;
 
+TEST(Camera, look_at_returns_camera_that_points_towards_target)
+{
+    const Vector3 position = {-1.0f, -3.0f, -5.0f};
+    const Vector3 target   = { 1.0f,  1.0f,  1.0f};
+    const Vector3 up       = { 0.0f,  1.0f,  0.0f};
+
+    const auto camera = Camera::look_at(position, target, up);
+
+    ASSERT_EQ(camera.position(), position);
+    ASSERT_TRUE(all_of(equal_within_absdiff(camera.direction(), normalize(target - position), 0.00001f)));
+}
+
+TEST(Camera, look_at_normalizes_up)
+{
+    const Vector3 position = { 1.0f,  0.0f,  0.0f};
+    const Vector3 target   = { 0.0f,  0.0f,  0.0f};
+    const Vector3 up       = { 0.0f,  1.0f,  1.0f};  // not normalized
+
+    const auto camera = Camera::look_at(position, target, up);
+
+    ASSERT_TRUE(all_of(equal_within_absdiff(camera.up(), normalize(up), 0.00001f)));
+}
+
+TEST(Camera, look_at_falls_back_when_up_is_parallel_to_target)
+{
+    const Vector3 position = { 7.0f, 0.0f,  2.0f};
+    const Vector3 target   = { 0.0f, 0.0f,  0.0f};
+    const Vector3 up       = 0.3f * position;  // parallel to (target - position)
+
+    const auto camera = Camera::look_at(position, target, up);
+
+    ASSERT_EQ(camera.up(), Vector3(0.0f, 1.0f, 0.0f));
+}
+
 TEST(Camera, can_default_construct)
 {
     const Camera camera;  // should compile + run

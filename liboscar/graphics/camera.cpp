@@ -25,17 +25,18 @@ namespace
 {
     Quaternion make_camera_rotation(const Vector3& direction, const Vector3& up)
     {
+        const Vector3 normalized_direction = normalize(direction);
         Vector3 reference_up = normalize(up);
 
         // Check for parallel (bad) `up`, falling back to something good if necessary.
-        if (is_parallel(direction, reference_up)) {
+        if (is_parallel(normalized_direction, reference_up)) {
             constexpr std::array fallbacks = {
                 Vector3{0.0f, 1.0f, 0.0f},  // +Y
                 Vector3{1.0f, 0.0f, 0.0f},  // +X
                 Vector3{0.0f, 0.0f, 1.0f},  // +Z
             };
             for (const auto& fallback : fallbacks) {
-                if (not is_parallel(direction, fallback)) {
+                if (not is_parallel(normalized_direction, fallback)) {
                     reference_up = fallback;
                     break;
                 }
@@ -43,7 +44,7 @@ namespace
         }
 
         // Construct camera rotation frame.
-        const auto frame_backward = -normalize(direction);
+        const auto frame_backward = -normalized_direction;
         const auto frame_right    =  normalize(cross(reference_up, frame_backward));
         const auto frame_up       =  cross(frame_backward, frame_right);
         return quaternion_from_xyz(frame_right, frame_up, frame_backward);
@@ -260,6 +261,11 @@ private:
     CameraClippingPlanes clipping_planes_{0.1f, 100.0f};
     std::optional<Matrix4x4> maybe_projection_matrix_override_;
 };
+
+Camera osc::Camera::look_at(const Vector3& position, const Vector3& target, const Vector3& up)
+{
+    return Camera{position, target - position, up};
+}
 
 osc::Camera::Camera() : impl_{make_cowv<Impl>()} {}
 osc::Camera::Camera(const Vector3& position, const Vector3& direction, const Vector3& up) :
