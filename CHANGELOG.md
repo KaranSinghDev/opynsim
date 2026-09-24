@@ -9,6 +9,7 @@ on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Moved `opynsim.ForwardDynamicSolver` to `opynsim.solvers.ForwardDynamicsSolver`.
 - Added a constructor to `opynsim.graphics.Camera` that accepts `position`, `direction`
   and `up`, which enables oneliner camera initializers.
+- Added `opynsim.graphics.Camera.look_at`, which creates a camera looking at a target.
 - C++: Added `osc::Camera::Camera(position, direction, up)` constructor.
 - C++: Added `osc::Camera::look_at(position, target, up)` factory function.
 

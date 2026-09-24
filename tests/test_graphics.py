@@ -137,6 +137,19 @@ def test_can_construct_camera_from_position_direction_up():
     )
 
     assert np.array_equal(camera.position, position)
-    tolerance = 0.0000001  # The camera doesn't store direction/up (quaternions)
+    tolerance = 0.0000001  # The camera doesn't store direction/up.
     np.testing.assert_allclose(camera.direction, direction, atol=tolerance)
     np.testing.assert_allclose(camera.up, up, atol=tolerance)
+
+def test_look_at_constructs_expected_camera():
+    import numpy as np
+
+    position = np.array([1.0, 2.0, 3.0])
+    target = np.array([-1.0, -1.0, -1.0])
+    up = np.array([0.0, 1.0, 0.0])
+    camera = opyn.graphics.Camera.look_at(position=position, target=target, up=up)
+
+    assert np.array_equal(camera.position, position)
+    tolerance = 0.0000001  # The camera doesn't store direction/up.
+    expected_direction = (target - position) / np.linalg.norm(target - position)
+    np.testing.assert_allclose(camera.direction, expected_direction, atol=tolerance)
