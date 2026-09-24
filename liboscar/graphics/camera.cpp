@@ -14,15 +14,50 @@
 #include <liboscar/maths/vector.h>
 #include <liboscar/utilities/enum_helpers.h>
 
+#include <array>
 #include <cmath>
 #include <optional>
 
 using namespace osc;
 using namespace osc::literals;
 
+namespace
+{
+    Quaternion make_camera_rotation(const Vector3& direction, const Vector3& up)
+    {
+        Vector3 reference_up = normalize(up);
+
+        // Check for parallel (bad) `up`, falling back to something good if necessary.
+        if (is_parallel(direction, reference_up)) {
+            constexpr std::array fallbacks = {
+                Vector3{0.0f, 1.0f, 0.0f},  // +Y
+                Vector3{1.0f, 0.0f, 0.0f},  // +X
+                Vector3{0.0f, 0.0f, 1.0f},  // +Z
+            };
+            for (const auto& fallback : fallbacks) {
+                if (not is_parallel(direction, fallback)) {
+                    reference_up = fallback;
+                    break;
+                }
+            }
+        }
+
+        // Construct camera rotation frame.
+        const auto frame_backward = -normalize(direction);
+        const auto frame_right    =  normalize(cross(reference_up, frame_backward));
+        const auto frame_up       =  cross(frame_backward, frame_right);
+        return quaternion_from_xyz(frame_right, frame_up, frame_backward);
+    }
+}
+
 class osc::Camera::Impl final {
 public:
     Impl() = default;
+
+    Impl(const Vector3& position, const Vector3& direction, const Vector3& up) :
+        position_{position},
+        rotation_{make_camera_rotation(direction, up)}
+    {}
 
     friend bool operator==(const Impl&, const Impl&) = default;
 
@@ -227,6 +262,10 @@ private:
 };
 
 osc::Camera::Camera() : impl_{make_cowv<Impl>()} {}
+osc::Camera::Camera(const Vector3& position, const Vector3& direction, const Vector3& up) :
+    impl_{make_cowv<Impl>(position, direction, up)}
+{}
+
 bool osc::operator==(const Camera& lhs, const Camera& rhs) { return lhs.impl_ == rhs.impl_ or *lhs.impl_ == *rhs.impl_; }
 
 void osc::Camera::reset() { impl_.upd()->reset(); }

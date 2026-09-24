@@ -22,6 +22,17 @@ namespace osc
     public:
         Camera();
 
+        /// Constructs a camera from a world-space position (`position`),
+        /// direction (`direction`), and upwards vector (`up`).
+        ///
+        /// `direction` and `up` are normalized by the implementation. If they
+        /// are parallel then `up` will fallback to something non-parallel.
+        explicit Camera(
+            const Vector3& position,
+            const Vector3& direction,
+            const Vector3& up = {0.0f, 1.0f, 0.0f}
+        );
+
         // resets the camera to default parameters
         void reset();
 
