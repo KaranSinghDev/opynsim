@@ -3651,7 +3651,10 @@ namespace
     template<VertexBufferComponent EncodedValue, typename DecodedValue>
     DecodedValue decode(const std::byte* b)
     {
-        const EncodedValue& encoded_value = reinterpret_cast<const EncodedValue&>(*b);
+        static_assert(std::is_trivially_copyable_v<EncodedValue>);
+
+        EncodedValue encoded_value;
+        std::memcpy(&encoded_value, b, sizeof(encoded_value));
         return to<DecodedValue>(encoded_value);
     }
 
@@ -3662,8 +3665,10 @@ namespace
     template<typename DecodedValue, VertexBufferComponent EncodedValue>
     void encode(std::byte* p, DecodedValue v)
     {
-        EncodedValue& encoded_value = reinterpret_cast<EncodedValue&>(*p);
-        encoded_value = to<EncodedValue>(v);
+        static_assert(std::is_trivially_copyable_v<EncodedValue>);
+
+        const auto encoded_value = to<EncodedValue>(v);
+        std::memcpy(p, &encoded_value, sizeof(encoded_value));
     }
 
     // mid-level multi-component decode/encode functions
