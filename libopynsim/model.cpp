@@ -339,7 +339,7 @@ public:
                 }
                 model_.setStateVariableValues(state, values);                      // Write values vector into the state
 
-                //const_cast<OpenSim::Model&>(model_).assemble(state);  // TODO
+                //model_.assemble(state);  // TODO
                 //model_.equilibrateMuscles(state);  // TODO
                 model_.getSystem().realize(state, to_simbody_stage(realized_to));  // Realize state to caller-specified stage
 
