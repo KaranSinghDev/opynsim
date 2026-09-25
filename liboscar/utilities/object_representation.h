@@ -44,21 +44,4 @@ namespace osc
         // >   examination of the object representation of any object as an array of bytes.
         return {reinterpret_cast<const Byte*>(std::ranges::data(range)), sizeof(typename Range::value_type) * std::ranges::size(range)};  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
     }
-
-    template<typename T>
-    requires (not std::is_function_v<T>)
-    constexpr const char* to_char_ptr(const T* p)
-    {
-        // this is one of the few cases where `reinterpret_cast` is guaranteed to be safe
-        // for _examination_ (i.e. reading)
-        //
-        // > from: https://en.cppreference.com/w/cpp/language/reinterpret_cast
-        // >
-        // > If a type `T_ref` is similar to any of the following types, an object of dynamic
-        // > type `T_obj` is type-accessible through glvalue of type `T_ref`:
-        // >
-        // > - `char`, `unsigned char` or `std::byte`: this permits examination of the object
-        // >   representation of any object as an array of bytes.
-        return reinterpret_cast<const char*>(p);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-    }
 }

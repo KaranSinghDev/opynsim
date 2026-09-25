@@ -213,8 +213,9 @@ namespace
     CStringView opengl_string_to_cstringview(const GLubyte* string_ptr)
     {
         static_assert(sizeof(GLubyte) == sizeof(CStringView::value_type));
+        static_assert(alignof(GLubyte) == alignof(CStringView::value_type));
         return string_ptr ?
-            CStringView{to_char_ptr(string_ptr)} :
+            CStringView{reinterpret_cast<const char*>(string_ptr)} :
             CStringView{};
     }
 
