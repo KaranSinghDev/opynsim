@@ -7204,7 +7204,4 @@ void osc::GraphicsBackend::copy_texture(
             GL_LINEAR  // the two texture may have different pixel dimensions (avoid GL_NEAREST)
         );
     }
-
-    // TODO: should be copied into CPU memory if mip==0? (won't store mipmaps in the CPU but
-    // maybe it makes sense to store the mip==0 in CPU?)
 }
