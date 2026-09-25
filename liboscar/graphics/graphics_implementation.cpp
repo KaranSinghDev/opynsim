@@ -3651,7 +3651,7 @@ namespace
     template<VertexBufferComponent EncodedValue, typename DecodedValue>
     DecodedValue decode(const std::byte* b)
     {
-        const EncodedValue& encoded_value = *std::launder(reinterpret_cast<const EncodedValue*>(b));
+        const EncodedValue& encoded_value = reinterpret_cast<const EncodedValue&>(*b);
         return to<DecodedValue>(encoded_value);
     }
 
@@ -3662,7 +3662,7 @@ namespace
     template<typename DecodedValue, VertexBufferComponent EncodedValue>
     void encode(std::byte* p, DecodedValue v)
     {
-        EncodedValue& encoded_value = *std::launder(reinterpret_cast<EncodedValue*>(p));
+        EncodedValue& encoded_value = reinterpret_cast<EncodedValue&>(*p);
         encoded_value = to<EncodedValue>(v);
     }
 
